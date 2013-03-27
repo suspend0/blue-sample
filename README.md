@@ -8,6 +8,8 @@ Build and run:
    
 Things: 
  * A "hello world" at http://localhost:8080/hello and http://localhost:8080/hello?name=Bob 
+ * A DAO at http://localhost:8080/customer
+ * One part of the app is built by Guice
 
-Hibernate and similar still to come.
+
 

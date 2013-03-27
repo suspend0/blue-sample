@@ -1,2 +1,10 @@
 template: Hello, %s!
 defaultName: Stranger
+
+database:
+  driverClass: org.hsqldb.jdbc.JDBCDriver
+  url: jdbc:hsqldb:mem:hib
+  user: sa
+  password:
+  properties:
+    hibernate.hbm2ddl.auto: create-drop
