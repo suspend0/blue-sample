@@ -3,7 +3,7 @@ This is playing around with dropwizard, guice and hibernate.  Based on http://dr
 
 Build and run:
 
- * mvn packag:xe
+ * mvn package
  * java -jar target/blue-sample-1.0.jar server src/main/config/dev.yml 
    
 Things: 

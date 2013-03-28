@@ -1,15 +1,12 @@
 package com.sample.blue;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Throwables;
-import com.yammer.dropwizard.config.Configuration;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.yammer.dropwizard.config.Configuration;
 import com.yammer.dropwizard.db.DatabaseConfiguration;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import java.io.IOException;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class BlueConfiguration extends Configuration {

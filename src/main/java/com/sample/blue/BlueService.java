@@ -13,11 +13,18 @@ import com.yammer.dropwizard.config.Environment;
 import com.yammer.dropwizard.db.DatabaseConfiguration;
 import com.yammer.dropwizard.hibernate.HibernateBundle;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 
 public class BlueService extends Service<BlueConfiguration> {
     public static void main(String[] args) throws Exception {
         new BlueService().run(args);
     }
+
+    public static final boolean GUICE = false;
 
     private final HibernateBundle<BlueConfiguration> hibernate;
 
@@ -50,8 +57,16 @@ public class BlueService extends Service<BlueConfiguration> {
         environment.addHealthCheck(new TemplateHealthCheck(template));
 
         // Account
-        Injector account = Guice.createInjector(new AccountModule(), new ServiceModule());
-        environment.addResource(account.getInstance(CustomerResource.class));
+        if (GUICE) {
+            Injector account = Guice.createInjector(new AccountModule(), new ServiceModule());
+            environment.addResource(account.getInstance(CustomerResource.class));
+        } else {
+            AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
+            ctx.getBeanFactory().registerResolvableDependency(SessionFactory.class, new SpringHibernate());
+            ctx.register(SpringConfig.class);
+            ctx.refresh();
+            environment.addResource(ctx.getBean(CustomerResource.class));
+        }
     }
 
     private class ServiceModule implements Module {
@@ -62,6 +77,18 @@ public class BlueService extends Service<BlueConfiguration> {
 
         @Provides
         public SessionFactory provideSessionFactory() {
+            return hibernate.getSessionFactory();
+        }
+    }
+
+    @Configuration
+    @ComponentScan("com.sample.blue.account")
+    public static class SpringConfig {
+    }
+
+    private final class SpringHibernate implements ObjectFactory{
+        @Override
+        public Object getObject() throws BeansException {
             return hibernate.getSessionFactory();
         }
     }
